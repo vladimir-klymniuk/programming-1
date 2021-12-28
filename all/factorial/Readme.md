@@ -10,3 +10,8 @@
 
     In mathematics, a product is the result of multiplication or an expression that identifies factors to be multiplied.
 ```
+
+
+```
+    complexity of this algorithm is 0(n)
+```
