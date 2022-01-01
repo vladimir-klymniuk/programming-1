@@ -1,0 +1,1 @@
+g++ -Wall -std=c++14 stack.cpp
