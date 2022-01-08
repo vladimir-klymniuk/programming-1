@@ -1,5 +1,5 @@
 -- defines a factorial 
-function fact (n)
+function factorial (n)
     if n == 0 then
         return 1
     else
@@ -9,4 +9,4 @@ end
 
 print("enter a number")
 a = io.read("*n") --reads a number
-print(fact(a))
+print(factorial(a))

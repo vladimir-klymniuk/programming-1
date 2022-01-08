@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+
+    nginx: 
+        image: nginx:latest
+        restart: always
+        volumes:
+            - ./nginx/ssl:/etc/nginx/ssl
+            - ./nginx/logs:/var/log/nginx
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./data/logs/nginx:/var/log/nginx/
+            # - ./nginx/upstream.conf:/etc/nginx/conf.d/upstream.conf            
+        ports:
+            - "${NGINX_PORT}:80"            
+        networks:
+            - backend
+
+    redis:
+        build:
+            context: ./docker/redis
+            args:
+                - REDIS_VERSION=${REDIS_VERSION}
+        volumes:
+            - ${DATA_PATH_HOST}/redis:/data
+        ports:
+            - "${REDIS_PORT}:6379"
+        networks:
+            - backend
+
+    mysql:
+        restart: always
+        build:
+            context: ./docker/mysql
+            args:
+                - MYSQL_VERSION=${MYSQL_VERSION}
+        cap_add:
+            - SYS_NICE
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQ_PASSWORD=${MYSQL_PASSWORD}
+            - TZ=${WORKSPACE_TIMEZONE}
+        volumes:
+            - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+        ports:
+            - "${MYSQL_PORT}:3306"
+        networks:
+            - backend
+
+networks:
+    backend:
+        driver: ${NETWORKS_DRIVER}
