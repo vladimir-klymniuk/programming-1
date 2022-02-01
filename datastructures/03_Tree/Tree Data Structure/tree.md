@@ -39,7 +39,7 @@
     It is the link between any two nodes.
 
          1
-        / \ --> Edge
+        / \  --> Edge
        2   3 --> Node
       / \
      4   5
@@ -76,7 +76,7 @@
             h = 0   h = 0
             d = 2   d = 2
 
-    Height and depth of each node in a tree
+     'Height and depth of each node in a tree'
 ```
 
 ### Degree of a Node
@@ -95,7 +95,7 @@
      / \               / \
     4   5             4   5         3
 
-        Creating forest from a tree
+        'Creating forest from a tree'
 ```
 You can create a forest by cutting the root of a tree.
 
