@@ -9,7 +9,7 @@ struct node {
     struct node* right;
 };
 
-// Inorder traversal
+// Inorder traversal +
 void inorderTraversal(struct node* root) {
     if (root == NULL) return;
     inorderTraversal(root->left);
@@ -20,7 +20,7 @@ void inorderTraversal(struct node* root) {
 // preorderTraversal traversal
 void preorderTraversal(struct node* root) {
     if (root == NULL) return;
-    printf("%d", root->item);
+    printf("%d ->", root->item);
     preorderTraversal(root->left);
     preorderTraversal(root->right);
 }
@@ -55,9 +55,8 @@ struct node* insertRight(struct node* root, int value) {
     return root->right;
 }
 
-int main() {
-    struct node* root = createNode(1);
-    
+
+//    example 1
 
 //          1
 //         / \
@@ -66,17 +65,46 @@ int main() {
 //      4   5
 //     / \
 //    6   7
-    // insertLeft(root, 12);
-    // insertRight(root, 9);
 
-    // insertLeft(root->left, 5);
-    // insertRight(root->left, 6);
+//    6 -> 4 -> 7 -> 5 -> 2 -> 3 -> 1
 
-    printf("Inorder traversal \n");
-    inorderTraversal(root);
+//    example 2
 
-    printf("\nreorder traversal \n");
-    preorderTraversal(root);
+//          1
+//         / \
+//       12    9
+//      /  \
+//     5    6
+
+// Inorder:     5 -> 6  -> 12 -> 9 -> 1
+// Preorder:    1 -> 12 -> 5  -> 6 -> 9
+// Postorder:   5 -> 6  -> 12 -> 9 -> 1    
+
+
+int main() {
+    // struct node* root = createNode(1);
+
+    // // insertLeft(root, 2);
+    // // insertRight(root,3);
+
+    // // insertLeft(root->left, 4);
+    // // insertRight(root->left, 5);
+
+    // // insertLeft(root->left->left, 6);
+    // // insertLeft(root->left->right, 7);
+
+    struct node* root = createNode(1);
+    insertLeft(root, 12);
+    insertRight(root, 9);
+
+    insertLeft(root->left, 5);
+    insertRight(root->left, 6);
+
+    // printf("\n Inorder traversal \n");
+    // inorderTraversal(root);
+
+    // printf("\n Preorder traversal \n");
+    // preorderTraversal(root);
 
     printf("\nPostorder traversal \n");
     postorderTraversal(root);
