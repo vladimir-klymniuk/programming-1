@@ -1,5 +1,3 @@
-
-
 # Tree traversal in Python
 
 class Node:
