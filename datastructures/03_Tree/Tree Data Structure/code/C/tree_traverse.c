@@ -82,23 +82,36 @@ struct node* insertRight(struct node* root, int value) {
 
 
 int main() {
-    // struct node* root = createNode(1);
 
-    // // insertLeft(root, 2);
-    // // insertRight(root,3);
-
-    // // insertLeft(root->left, 4);
-    // // insertRight(root->left, 5);
-
-    // // insertLeft(root->left->left, 6);
-    // // insertLeft(root->left->right, 7);
-
+    //          1
+    //         / \
+    //        2   3
+    //       / \
+    //      4   5
+    //     / \
+    //    6   7
     struct node* root = createNode(1);
-    insertLeft(root, 12);
-    insertRight(root, 9);
 
-    insertLeft(root->left, 5);
-    insertRight(root->left, 6);
+    insertLeft(root, 2);
+    insertRight(root,3);
+
+    insertLeft(root->left, 4);
+    insertRight(root->left, 5);
+
+    insertLeft(root->left->left, 6);
+    insertLeft(root->left->right, 7);
+
+    //          1
+    //         / \
+    //       12    9
+    //      /  \
+    //     5    6
+    // struct node* root = createNode(1);
+    // insertLeft(root, 12);
+    // insertRight(root, 9);
+
+    // insertLeft(root->left, 5);
+    // insertRight(root->left, 6);
 
     // printf("\n Inorder traversal \n");
     // inorderTraversal(root);
