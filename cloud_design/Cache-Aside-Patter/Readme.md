@@ -35,8 +35,8 @@
 ```
 
 Дать определение операциям:
+    `Cache-Aside` - Load data on demand into a cache from a data store. This pattern can improve performance and also helps to maintain consistency between data held in the 
 
     read-through 
     write-through
-    write-behin
-    cache-aside
+    write-behind
