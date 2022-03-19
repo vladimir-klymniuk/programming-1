@@ -1,9 +1,10 @@
 
 | Pattern       | Categories    | Description   |
 | ------------- | ------------- | ------------- |
-| Cache-aside   |-| Load data on demand into a cache from a data store. This pattern can improve performance and also helps to maintain consistency between data held in the cache and the data in the underlying data store.
+| Cache-aside   |-| ```txt Load data on demand into a cache from a data store. This pattern can improve performance and also helps to maintain consistency between data held in the cache and the data in the underlying data store.
 
     Загрузка данных по востребованию в кэш из датахранилища. Этот паттерн может улучшить производительность и так же помогает поддерживать консистентвость между данными хранящимися в кэше и оригинальном хранилище.
+```    
 | Circuit Breaker |-|
 | Compensating Transaction |-|
 | Competing Consumers |-|
