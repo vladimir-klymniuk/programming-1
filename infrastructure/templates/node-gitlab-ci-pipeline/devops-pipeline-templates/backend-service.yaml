@@ -1,0 +1,73 @@
+include:
+  - project: '%project%/devops/pipeline/templates'
+    ref: master
+    file:
+      - backend-builder.yaml
+      - backend-cache.yaml
+      - backend-modules.yaml
+
+.build_server_inherit: &build_server
+  image: $BUILDER_IMAGE
+  stage: build_components
+  only:
+    - master
+    - /^release*/
+  needs: ["modules_install"]
+  dependencies:
+    - modules_install
+
+.store_server_inherit: &store_server
+  stage: build
+  needs: ["build_payment_server"]
+  dependencies:
+    - build_backend_server
+
+variables:
+  BACKEND_SERVER_LATEST: $CI_REGISTRY_IMAGE/backend_server:latest
+  BACKEND_SERVER_COMMIT: $CI_REGISTRY_IMAGE/backend_server:$CI_COMMIT_SHA
+  BACKEND_COMPONENT_DIST: ./dist/apps/backend-server
+    # todo: add jirra issue about parsing the string with last version.
+  # before release all versions would be only minor.
+  BACKEND_RELEASE_BUILD:  $CI_REGISTRY_IMAGE/backend_server:0.1.0
+
+build_backend_server:
+  <<: *build_server
+  script:
+    - nx build %service_name%-server --verbose
+    - cd $BACKEND_COMPONENT_DIST
+    - npm install --legacy-peer-deps
+    - npm install reflect-metadata tslib rxjs passport pg bcryptjs passport-jwt
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - dist/apps/%service_name%
+
+store_backend_server:
+  <<: *store_server
+  only:
+    - master
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $BACKEND_SERVER_LATEST || true
+    - docker build --build-arg app=%service_name%-server -f Dockerfile.build -t $BACKEND_SERVER_COMMIT -t $BACKEND_SERVER_LATEST $BACKEND_COMPONENT_DIST
+    - docker push $BACKEND_SERVER_COMMIT
+    - docker push $BACKEND_SERVER_LATEST
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - dist/apps/backend-server
+
+store_backend_release_server:
+  <<: *store_server
+  only:
+    - /^release*/
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $PAYMENT_SERVER_LATEST || true
+    - docker build --build-arg app=%service_name%-server -f Dockerfile.build -t $BACKEND_RELEASE_BUILD -t $BACKEND_SERVER_COMMIT $BACKEND_COMPONENT_DIST
+    - docker push $BACKEND_SERVER_COMMIT
+    - docker push $BACKEND_RELEASE_BUILD
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - dist/apps/backend-server

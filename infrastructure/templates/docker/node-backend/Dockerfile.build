@@ -1,0 +1,11 @@
+FROM node:16.15.0-alpine
+
+ARG app
+ENV PORT=3000
+EXPOSE ${PORT}
+
+WORKDIR /dist/apps/${app}
+
+COPY . .
+
+ENTRYPOINT node main.js

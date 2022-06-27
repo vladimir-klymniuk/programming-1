@@ -1,0 +1,2 @@
+variables:
+  BUILDER_IMAGE: registry.gitlab.com/%project%/devops/docker/node-builder:latest

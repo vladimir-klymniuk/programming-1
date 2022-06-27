@@ -1,0 +1,27 @@
+image: docker:19.03.12
+
+include:
+  - project: '%project%/devops/pipeline/templates'
+    ref: master
+    file: 
+      - 'backend-%component%.yaml'
+
+services:
+  - docker:19.03.12-dind
+
+stages:
+  - modules_install
+  - build_components
+  - build
+
+build_feature:
+  when: manual
+  stage: build
+  only:
+    - /^feature*/
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:dev-latest || true
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -t $CI_REGISTRY_IMAGE:dev-latest --cache-from $CI_REGISTRY_IMAGE:dev-latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:dev-latest

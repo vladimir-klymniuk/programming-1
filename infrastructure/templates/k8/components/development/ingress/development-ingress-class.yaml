@@ -1,0 +1,12 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx-dev
+  namespace: development
+  labels:
+    app.kubernetes.io/component: controller
+  annotations:
+    ingressclass.kubernetes.io/is-defaoult-class: "true"
+spec:
+  controller: k8s.io/ingress-nginx

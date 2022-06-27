@@ -1,0 +1,110 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: development
+  name: backend-dev
+  labels:
+    app: backend-dev
+
+spec:
+  replicas: 2               # minum count for stabile swap on deploy
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      name: backend-dev
+
+  template:
+    metadata:
+      labels:
+        name: backend-dev
+
+    spec:
+      terminationGracePeriodSeconds: 20
+      restartPolicy: Always
+
+      imagePullSecrets:
+      - name: gitlab-auth
+
+      containers:
+      - image: registry.gitlab.com/project_name/project-backend/backend_server:latest
+        name: backend-dev
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        # todo: move port number to variables
+        - containerPort: 3000
+          # - name: https
+          #   containerPort: 443
+        # - name: http
+        #   containerPort: 80
+
+        # that is  configurations to pod limitations
+        # resources:
+        #   limits:
+        #     cpu: 300,
+        #     memory: 100Mi
+        #   requests:
+        #     cpu: 100m
+        #     memory: 100Mi
+
+        env:
+        - name: TYPEORM_CONNECTION
+          value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: development
+  name: backend-dev
+  labels:
+    app: backend-dev
+
+spec:
+  type: ClusterIP
+  selector:
+    name: backend-dev
+  ports:
+    - name: http
+      targetPort: 3000
+      port: 80
+
+        # !!!todo: move variables values into k8s secret, out of repository
+        # - name: FOO_SECRET
+        #   valueFROM:
+        #     secretKeyRef:
+        #       name: fortune-https
+        #       key: foo
+
+        # securityContext:
+        #   runAsNonRoot: true
+        #   runAsUser: 10001
+        #   capabilities:
+        #     drop:
+        #       - all
+        #     add:
+        #       - NET_BIND_SERVICE
+        #   readOnlyRootFilesystem: true
+        # todo: write health check route for each component
+        # livenessProbe:
+        #   httpGet:
+        #    path: /ping
+        #    port: 80
+        # initialDelaySeconds: 300
+        # periodSeconds: 3
+        # readinessProbe:
+        #   httpGet:
+        #    path: /ping
+        #    port: 80
+        # todo: edit markup
+        # nodeSelector:
+        #   beta.kubernetes.io/os: linux
+# Example of extended selector posibilities.
+#   selector:
+#      matchLabels:
+#         component: redis
+#      matchExpressions:
+#         - { key: tier, operator: In, values: [cache] }
+#         - { key: environment, operator: NotIn, values: [dev] }
+#
+# https://kubernetes.io/docs/concepts/overview/working-with-objects/labels

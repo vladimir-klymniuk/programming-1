@@ -1,0 +1,19 @@
+include:
+  - project: '%project%/devops/pipeline/templates'
+    ref: master
+    file:
+      - backend-builder.yaml
+      - backend-cache.yaml
+
+modules_install:
+  stage: modules_install
+  image: $BUILDER_IMAGE
+  only:
+    - master
+    - /^release*/
+  script:
+    - npm install
+  cache:
+    key: build-cache
+    paths:
+      - node_modules/

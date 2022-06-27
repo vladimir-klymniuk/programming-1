@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dev-tls-secret
+  namespace: development
+type: kubernetes.io/tls
+data:
+    tls.key: |
+    tls.crt: |
+  # tls.crt: base64 encoded cert
+  # tls.key: base64 encoded key

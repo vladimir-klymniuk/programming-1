@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: development
+  name: development-dev
+  labels:
+    app: development-dev
+
+spec:
+  replicas: 2       # should be configurable parameter
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      name: development-dev
+
+  template:
+    metadata:
+      labels:
+        name: development-dev
+
+    spec:
+      terminationGracePeriodSeconds: 9
+      restartPolicy: Always
+
+      imagePullSecrets:
+      - name: gitlab-auth
+
+      containers:
+       - image: registry.gitlab.com/project_name/project_name-backend/backend_server:latest
+         name: development-dev
+         imagePullPolicy: IfNotPresent
+
+         ports:
+          - containerPort: 3000
+
+         env:
+         - name: TYPEORM_CONNECTION
+           value: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: development
+  name: development-dev
+  labels:
+    app: development-dev
+
+spec:
+  type: ClusterIP
+  selector:
+    name: development-dev
+  ports:
+    - name: http
+      targetPort: 3000
+      port: 80
