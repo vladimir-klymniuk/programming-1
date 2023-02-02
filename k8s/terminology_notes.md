@@ -74,3 +74,5 @@ Cluster network: Группа ссылок, логгических или физ
 Service: Кубернетес сервис (способ обнаружить приложение запущенное на группе подов как доступную через сеть службу) 
 которые определяет группу подов используя селекторы лейбл (теги обьектов идентифицируемых по аттрибутам, имеющим смысл для конкретных пользователей).
 
+## Origin notes from developers
+# https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#types-kinds
